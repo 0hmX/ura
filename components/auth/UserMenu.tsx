@@ -1,9 +1,11 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useLogout } from '@/hooks/useLogout';
 
 export function UserMenu() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile } = useAuth();
+  const logout = useLogout();
 
   if (!user || !profile) {
     return null;
@@ -15,7 +17,7 @@ export function UserMenu() {
         Welcome, {profile.username}
       </span>
       <button
-        onClick={signOut}
+        onClick={logout}
         className="text-sm text-blue-600 hover:text-blue-500"
       >
         Sign Out
