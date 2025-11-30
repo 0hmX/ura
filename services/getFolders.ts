@@ -1,26 +1,51 @@
 import { supabase } from '@/utils/supabase/client';
+import { mobileSupabase } from '@/utils/supabase/mobile-client';
 import type { Folder } from '@/types/Folder';
 
-async function getFoldersWithRetry(retryCount = 0): Promise<Folder[]> {
+// Detect if we're on mobile
+const isMobile = typeof navigator !== 'undefined' && 
+  /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+const getSupabaseClient = () => isMobile ? mobileSupabase : supabase;
+
+async function getFoldersWithRetry(userId?: string, retryCount = 0): Promise<Folder[]> {
   const maxRetries = 3;
   const retryDelay = 1000; // 1 second
   
   try {
     console.log('📂 getFolders: Fetching folders... (attempt', retryCount + 1, 'of', maxRetries + 1, ')');
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      throw new Error('Authentication required. Please sign in again.');
+    let user;
+    if (userId) {
+      console.log('👤 getFolders: Using provided userId:', userId);
+      user = { id: userId };
+    } else {
+      // Add timeout for auth call specifically
+      const authTimeout = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Auth getUser timeout')), 10000);
+      });
+
+      const client = getSupabaseClient();
+      const authPromise = client.auth.getUser();
+      console.log('🔐 getFolders: Getting user auth...');
+      
+      const authResult = await Promise.race([authPromise, authTimeout]) as any;
+      user = authResult.data?.user;
+      
+      if (!user) {
+        throw new Error('Authentication required. Please sign in again.');
+      }
+
+      console.log('👤 getFolders: User authenticated:', user.id);
     }
 
-    console.log('👤 getFolders: User authenticated:', user.id);
-
-    // Add timeout for the database query
+    // Add timeout for the database query (more generous for mobile)
     const queryTimeout = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Database query timeout')), 8000);
+      setTimeout(() => reject(new Error('Database query timeout')), 15000);
     });
 
-    const queryPromise = supabase
+    const client = getSupabaseClient();
+    const queryPromise = client
       .from('folders')
       .select(`
         *,
@@ -43,7 +68,7 @@ async function getFoldersWithRetry(retryCount = 0): Promise<Folder[]> {
       if ((error.message.includes('timeout') || error.message.includes('network')) && retryCount < maxRetries) {
         console.log('🔄 getFolders: Retrying due to network/timeout error...');
         await new Promise(resolve => setTimeout(resolve, retryDelay * (retryCount + 1)));
-        return getFoldersWithRetry(retryCount + 1);
+        return getFoldersWithRetry(userId, retryCount + 1);
       }
       
       // Map common database errors to user-friendly messages
@@ -82,7 +107,7 @@ async function getFoldersWithRetry(retryCount = 0): Promise<Folder[]> {
     if (err instanceof Error && err.message.includes('timeout') && retryCount < maxRetries) {
       console.log('🔄 getFolders: Retrying due to timeout...');
       await new Promise(resolve => setTimeout(resolve, retryDelay * (retryCount + 1)));
-      return getFoldersWithRetry(retryCount + 1);
+      return getFoldersWithRetry(userId, retryCount + 1);
     }
     
     if (err instanceof Error) {
@@ -94,6 +119,6 @@ async function getFoldersWithRetry(retryCount = 0): Promise<Folder[]> {
   }
 }
 
-export async function getFolders(): Promise<Folder[]> {
-  return getFoldersWithRetry();
+export async function getFolders(userId?: string): Promise<Folder[]> {
+  return getFoldersWithRetry(userId);
 }

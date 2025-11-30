@@ -43,12 +43,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setError(null);
       console.log('📡 AppContext: Starting getFolders request...');
       
-      // Add timeout to prevent hanging
+      // Add timeout to prevent hanging (more generous for mobile)
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timeout - folders took too long to load')), 10000);
+        setTimeout(() => reject(new Error('Request timeout - folders took too long to load')), 20000);
       });
       
-      const foldersPromise = getFolders();
+      const foldersPromise = getFolders(user.id);
       const data = await Promise.race([foldersPromise, timeoutPromise]) as any;
       
       console.log('✅ AppContext: getFolders completed, folders:', data.length);
