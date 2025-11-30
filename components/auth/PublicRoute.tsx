@@ -10,7 +10,7 @@ export function PublicRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/');
+      router.replace('/');
     }
   }, [user, loading, router]);
 

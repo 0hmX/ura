@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,7 +10,7 @@ export default function SignInPage() {
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, error, clearError } = useAuth();
+  const { signIn, error, clearError, user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +20,7 @@ export default function SignInPage() {
 
     try {
       await signIn(emailOrUsername, password);
-      window.location.href = '/';
+      router.push('/');
     } catch (err) {
       console.error('Sign in error:', err);
     } finally {
