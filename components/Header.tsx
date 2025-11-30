@@ -6,11 +6,13 @@ export default function Header({
   title,
   backLink,
   children,
+  leftActions,
   showUserMenu = false,
 }: {
   title: string;
   backLink?: string;
   children?: ReactNode;
+  leftActions?: ReactNode;
   showUserMenu?: boolean;
 }) {
   return (
@@ -22,6 +24,11 @@ export default function Header({
           </Link>
         )}
         <h1 className="text-xl font-bold text-zinc-900">{title}</h1>
+        {leftActions && (
+          <div className="flex items-center gap-2">
+            {leftActions}
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-4">
         {children}

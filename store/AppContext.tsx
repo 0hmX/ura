@@ -13,7 +13,7 @@ interface AppContextType {
   folders: Folder[];
   loading: boolean;
   error: string | null;
-  addFolder: (name: string) => Promise<void>;
+  addFolder: (name: string, description?: string) => Promise<void>;
   deleteFolder: (id: string) => Promise<void>;
   addCard: (folderId: string, card: Omit<Card, 'id' | 'folder_id'>) => Promise<void>;
   deleteCard: (folderId: string, cardId: string) => Promise<void>;
@@ -51,25 +51,74 @@ export function AppProvider({ children }: { children: ReactNode }) {
     refreshFolders();
   }, [user]);
 
-  const addFolder = async (name: string) => {
+  const addFolder = async (name: string, description?: string) => {
+    // Negative space programming: Early validation
+    if (!name?.trim()) {
+      const error = 'Folder name is required';
+      setError(error);
+      throw new Error(error);
+    }
+
     try {
       setError(null);
-      const newFolder = await createFolder(name);
-      setFolders((prev) => [...prev, newFolder]);
+      console.log('📁 AppContext: Creating folder:', name.trim());
+      
+      const newFolder = await createFolder(name.trim(), description?.trim());
+      
+      console.log('✅ AppContext: Folder created successfully:', newFolder);
+      
+      setFolders((prev) => {
+        const updated = [...prev, newFolder];
+        console.log('📂 AppContext: Updated folders list:', { 
+          previousCount: prev.length, 
+          newCount: updated.length 
+        });
+        return updated;
+      });
+      
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create folder');
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create folder';
+      console.error('❌ AppContext: Folder creation failed:', err);
+      setError(errorMessage);
+      throw new Error(errorMessage);
     }
   };
 
   const deleteFolderHandler = async (id: string) => {
+    // Negative space programming: Early validation
+    if (!id?.trim()) {
+      const error = 'Folder ID is required';
+      setError(error);
+      throw new Error(error);
+    }
+
     try {
       setError(null);
+      console.log('🗑️ AppContext: Deleting folder:', id);
+      
+      // Find folder name for logging
+      const folder = folders.find(f => f.id === id);
+      const folderName = folder?.name || 'Unknown';
+      
       await deleteFolder(id);
-      setFolders((prev) => prev.filter((folder) => folder.id !== id));
+      
+      console.log('✅ AppContext: Folder deleted successfully:', folderName);
+      
+      setFolders((prev) => {
+        const updated = prev.filter((folder) => folder.id !== id);
+        console.log('📂 AppContext: Updated folders list after deletion:', {
+          previousCount: prev.length,
+          newCount: updated.length,
+          deletedFolder: folderName
+        });
+        return updated;
+      });
+      
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete folder');
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete folder';
+      console.error('❌ AppContext: Folder deletion failed:', err);
+      setError(errorMessage);
+      throw new Error(errorMessage);
     }
   };
 

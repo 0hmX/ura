@@ -6,7 +6,7 @@ export default function FolderList({
   onDelete,
 }: {
   folders: Folder[];
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => Promise<void>;
 }) {
   return (
     <div className="flex flex-col gap-4">
