@@ -3,13 +3,19 @@
 import { useState } from 'react';
 import type { Card } from '@/types/Card';
 
-export default function Flashcard({ card }: { card: Card }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-
+export default function Flashcard({
+  card,
+  isFlipped,
+  onFlip,
+}: {
+  card: Card;
+  isFlipped: boolean;
+  onFlip: () => void;
+}) {
   return (
     <div
       className="relative w-full h-64 perspective-1000"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={onFlip}
     >
       <div
         className={`absolute w-full h-full transition-transform duration-500 transform-style-preserve-3d ${

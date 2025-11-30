@@ -7,6 +7,18 @@ export async function generateCards(
 ): Promise<Card[]> {
   const prompt = `
     Given the following text, generate ${count} flashcards with a question and answer.
+    The output should be a JSON array of objects, where each object has "question" and "answer" keys.
+    Example:
+    [
+      {
+        "question": "What is the capital of France?",
+        "answer": "Paris"
+      },
+      {
+        "question": "What is the highest mountain in the world?",
+        "answer": "Mount Everest"
+      }
+    ]
     Text: ${text}
   `;
 
