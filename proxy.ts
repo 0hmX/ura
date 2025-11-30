@@ -37,7 +37,7 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  if (!session && !pathname.startsWith('/auth')) {
+  if (!session) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
