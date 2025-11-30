@@ -1,5 +1,6 @@
 import { supabase } from '@/utils/supabase/client';
 import type { Profile } from '@/types/User';
+import { createMissingProfile } from './createMissingProfile';
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
@@ -9,7 +10,9 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     .single();
     
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+      return await createMissingProfile(userId);
+    }
     throw error;
   }
   

@@ -20,7 +20,7 @@ export default function SignInPage() {
 
     try {
       await signIn(emailOrUsername, password);
-      router.push('/');
+      window.location.href = '/';
     } catch (err) {
       console.error('Sign in error:', err);
     } finally {

@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const profileData = await getProfile(userId);
       setProfile(profileData);
     } catch (err) {
-      console.error('Failed to load profile:', err);
+      setProfile(null);
     }
   };
 
@@ -63,7 +63,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    return () => subscription.unsubscribe();
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const signIn = async (emailOrUsername: string, password: string) => {
