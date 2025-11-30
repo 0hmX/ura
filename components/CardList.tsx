@@ -1,5 +1,5 @@
-import type { Card } from '../types/Card';
-import type { Folder } from '../types/Folder';
+import type { Card } from '@/types/Card';
+import type { Folder } from '@/types/Folder';
 import CardItem from './CardItem';
 
 export default function CardList({

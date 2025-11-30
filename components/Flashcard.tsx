@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Card } from '../types/Card';
+import type { Card } from '@/types/Card';
 
 export default function Flashcard({ card }: { card: Card }) {
   const [isFlipped, setIsFlipped] = useState(false);

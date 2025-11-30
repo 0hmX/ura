@@ -1,4 +1,4 @@
-import type { Folder } from '../types/Folder';
+import type { Folder } from '@/types/Folder';
 import FolderItem from './FolderItem';
 
 export default function FolderList({

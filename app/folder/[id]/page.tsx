@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAppContext } from '../../store/AppContext';
-import AddCardModal from '../../components/AddCardModal';
-import CardList from '../../components/CardList';
-import StudyButton from '../../components/StudyButton';
-import AddCardButton from '../../components/AddCardButton';
+import { useAppContext } from '@/store/AppContext';
+import AddCardModal from '@/components/AddCardModal';
+import CardList from '@/components/CardList';
+import StudyButton from '@/components/StudyButton';
+import AddCardButton from '@/components/AddCardButton';
+import Header from '@/components/Header';
 
 export default function FolderPage() {
   const { id } = useParams();
@@ -28,17 +29,13 @@ export default function FolderPage() {
 
   return (
     <div className="font-sans text-zinc-900">
-      <header className="flex items-center justify-between p-4 border-b border-zinc-200">
-        <Link href="/" className="text-xl font-bold text-zinc-900">
-          &larr; {folder.name}
-        </Link>
-        <div className="flex gap-2">
-          <StudyButton folderId={folder.id} />
-          <AddCardButton onClick={() => setIsModalOpen(true)} />
-        </div>
-      </header>
+      <Header title={folder.name} backLink="/" />
       <main className="p-4 relative">
+        <div className="mb-4">
+          <StudyButton folderId={folder.id} />
+        </div>
         <CardList folder={folder} onDelete={deleteCard} />
+        <AddCardButton onClick={() => setIsModalOpen(true)} />
       </main>
       {isModalOpen && (
         <AddCardModal

@@ -1,4 +1,4 @@
-import type { Card } from '../types/Card';
+import type { Card } from '@/types/Card';
 import { Trash2 } from 'lucide-react';
 
 export default function CardItem({

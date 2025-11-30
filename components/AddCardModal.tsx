@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useAppContext } from '../store/AppContext';
+import { useAppContext } from '@/store/AppContext';
+import type { Card } from '@/types/Card';
 import ManualCardForm from './ManualCardForm';
 import AiCardForm from './AiCardForm';
-import type { Card } from '../types/Card';
 import ModeSwitcher from './ModeSwitcher';
 
 type Mode = 'manual' | 'ai';

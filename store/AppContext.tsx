@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { Folder } from '../types/Folder';
-import type { Card } from '../types/Card';
+import type { Folder } from '@/types/Folder';
+import type { Card } from '@/types/Card';
 
 interface AppContextType {
   folders: Folder[];

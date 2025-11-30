@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAppContext } from '../../../store/AppContext';
-import Flashcard from '../../../components/Flashcard';
-import StudyNavigation from '../../../components/StudyNavigation';
+import { useAppContext } from '@/store/AppContext';
+import Flashcard from '@/components/Flashcard';
+import StudyNavigation from '@/components/StudyNavigation';
+import Header from '@/components/Header';
 
 export default function StudyPage() {
   const { id } = useParams();
@@ -38,11 +39,7 @@ export default function StudyPage() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <header className="flex items-center justify-between p-4 border-b border-zinc-200 w-full">
-        <Link href={`/folder/${id}`} className="text-xl font-bold text-zinc-900">
-          &larr; {folder.name}
-        </Link>
-      </header>
+      <Header title={folder.name} backLink={`/folder/${id}`} />
       <div className="w-full px-4 mt-4">
         <Flashcard card={card} />
         <StudyNavigation onPrev={handlePrev} onNext={handleNext} />

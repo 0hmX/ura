@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCards } from '../utils/gemini';
-import type { Card } from '../types/Card';
+import { generateCards } from '@/utils/gemini';
+import type { Card } from '@/types/Card';
 
 export default function AiCardForm({
   onSubmit,
