@@ -14,10 +14,11 @@ export default function Home() {
   return (
     <div className="font-sans text-zinc-900">
       <PageHeader title="Flashcards" />
-      <main className="p-4">
+      <main className="p-4 relative">
         <FolderList folders={folders} onDelete={deleteFolder} />
+        <AddFolderButton onClick={() => setIsModalOpen(true)} />
       </main>
-      <AddFolderButton onClick={() => setIsModalOpen(true)} />
+      {isModalOpen && <AddFolderModal onClose={() => setIsModalOpen(false)} />}
       {isModalOpen && <AddFolderModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );

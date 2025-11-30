@@ -6,9 +6,9 @@ export default function AddCardButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 rounded-full bg-zinc-800 text-white hover:bg-zinc-700 transition-colors"
+      className="fixed bottom-4 right-4 p-4 rounded-full bg-zinc-800 text-white shadow-lg hover:bg-zinc-700 transition-colors"
     >
-      <Plus />
+      <Plus size={24} />
     </button>
   );
 }

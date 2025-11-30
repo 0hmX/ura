@@ -17,10 +17,10 @@ export default function Flashcard({ card }: { card: Card }) {
         }`}
       >
         <div className="absolute w-full h-full flex items-center justify-center p-8 bg-white rounded-lg shadow-lg backface-hidden">
-          <p className="text-xl">{card.question}</p>
+          <p className="text-xl text-zinc-900">{card.question}</p>
         </div>
         <div className="absolute w-full h-full flex items-center justify-center p-8 bg-white rounded-lg shadow-lg rotate-y-180 backface-hidden">
-          <p className="text-xl">{card.answer}</p>
+          <p className="text-xl text-zinc-900">{card.answer}</p>
         </div>
       </div>
       <style jsx>{`

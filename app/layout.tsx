@@ -24,9 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
+        suppressHydrationWarning
       >
         <AppProvider>
           <div className="mx-auto max-w-md min-h-screen border-x border-zinc-200 bg-gray-50">

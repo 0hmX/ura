@@ -12,8 +12,8 @@ export default function CardItem({
 }) {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
-      <p className="font-bold">{card.question}</p>
-      <p>{card.answer}</p>
+      <p className="font-bold text-zinc-900">{card.question}</p>
+      <p className="text-zinc-700">{card.answer}</p>
       <button
         onClick={() => onDelete(folderId, card.id)}
         className="mt-4 text-sm text-red-500 self-end"

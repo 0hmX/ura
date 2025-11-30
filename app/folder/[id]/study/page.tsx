@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAppContext } from '../../../store/AppContext';
 import Flashcard from '../../../components/Flashcard';
+import StudyNavigation from '../../../components/StudyNavigation';
 
 export default function StudyPage() {
   const { id } = useParams();
@@ -37,22 +38,14 @@ export default function StudyPage() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="w-full max-w-md p-8">
+      <header className="flex items-center justify-between p-4 border-b border-zinc-200 w-full">
+        <Link href={`/folder/${id}`} className="text-xl font-bold text-zinc-900">
+          &larr; {folder.name}
+        </Link>
+      </header>
+      <div className="w-full px-4 mt-4">
         <Flashcard card={card} />
-        <div className="flex justify-between mt-8">
-          <button
-            onClick={handlePrev}
-            className="px-6 py-2 font-semibold text-zinc-800 bg-white rounded-lg shadow"
-          >
-            Prev
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 font-semibold text-zinc-800 bg-white rounded-lg shadow"
-          >
-            Next
-          </button>
-        </div>
+        <StudyNavigation onPrev={handlePrev} onNext={handleNext} />
         <div className="text-center mt-4 text-sm text-zinc-500">
           Card {currentIndex + 1} of {folder.cards.length}
         </div>

@@ -12,7 +12,7 @@ export default function FolderItem({
   return (
     <div className="p-4 bg-white rounded-lg shadow-md flex flex-col justify-between">
       <Link href={`/folder/${folder.id}`}>
-        <h2 className="text-xl font-bold">{folder.name}</h2>
+        <h2 className="text-xl font-bold text-zinc-900">{folder.name}</h2>
         <p className="text-zinc-500">{folder.cards.length} cards</p>
       </Link>
       <button

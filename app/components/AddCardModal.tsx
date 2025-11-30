@@ -5,6 +5,7 @@ import { useAppContext } from '../store/AppContext';
 import ManualCardForm from './ManualCardForm';
 import AiCardForm from './AiCardForm';
 import type { Card } from '../types/Card';
+import ModeSwitcher from './ModeSwitcher';
 
 type Mode = 'manual' | 'ai';
 
@@ -33,24 +34,7 @@ export default function AddCardModal({
       <div className="w-full max-w-lg p-6 bg-white rounded-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Add New Card</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setMode('manual')}
-              className={`px-3 py-1 text-sm rounded-full ${
-                mode === 'manual' ? 'bg-zinc-900 text-white' : 'bg-zinc-200'
-              }`}
-            >
-              Manual
-            </button>
-            <button
-              onClick={() => setMode('ai')}
-              className={`px-3 py-1 text-sm rounded-full ${
-                mode === 'ai' ? 'bg-zinc-900 text-white' : 'bg-zinc-200'
-              }`}
-            >
-              AI
-            </button>
-          </div>
+          <ModeSwitcher mode={mode} onModeChange={setMode} />
         </div>
 
         {mode === 'manual' && (

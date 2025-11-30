@@ -29,7 +29,7 @@ export default function FolderPage() {
   return (
     <div className="font-sans text-zinc-900">
       <header className="flex items-center justify-between p-4 border-b border-zinc-200">
-        <Link href="/" className="text-xl font-bold">
+        <Link href="/" className="text-xl font-bold text-zinc-900">
           &larr; {folder.name}
         </Link>
         <div className="flex gap-2">
@@ -37,7 +37,7 @@ export default function FolderPage() {
           <AddCardButton onClick={() => setIsModalOpen(true)} />
         </div>
       </header>
-      <main className="p-4">
+      <main className="p-4 relative">
         <CardList folder={folder} onDelete={deleteCard} />
       </main>
       {isModalOpen && (
