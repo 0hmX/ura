@@ -27,7 +27,7 @@ export default function FolderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900">
+    <div className="font-sans text-zinc-900">
       <header className="flex items-center justify-between p-4 border-b border-zinc-200">
         <Link href="/" className="text-xl font-bold">
           &larr; {folder.name}

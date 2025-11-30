@@ -36,7 +36,7 @@ export default function StudyPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-100">
+    <div className="flex flex-col items-center justify-center">
       <div className="w-full max-w-md p-8">
         <Flashcard card={card} />
         <div className="flex justify-between mt-8">

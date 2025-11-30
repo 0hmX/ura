@@ -6,7 +6,7 @@ export default function AddFolderButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-4 right-4 p-4 rounded-full bg-zinc-900 text-white shadow-lg"
+      className="fixed bottom-4 right-4 p-4 rounded-full bg-zinc-800 text-white shadow-lg hover:bg-zinc-700 transition-colors"
     >
       <Plus size={24} />
     </button>

@@ -12,7 +12,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900">
+    <div className="font-sans text-zinc-900">
       <PageHeader title="Flashcards" />
       <main className="p-4">
         <FolderList folders={folders} onDelete={deleteFolder} />
