@@ -11,7 +11,7 @@ export default function CardList({
 }) {
   return (
     <div className="grid grid-cols-1 gap-4">
-      {folder.cards.map((card) => (
+      {(folder.cards || []).map((card) => (
         <CardItem
           key={card.id}
           card={card}

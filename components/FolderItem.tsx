@@ -13,7 +13,7 @@ export default function FolderItem({
     <div className="p-4 bg-white rounded-lg shadow-md flex flex-col justify-between">
       <Link href={`/folder/${folder.id}`}>
         <h2 className="text-xl font-bold text-zinc-900">{folder.name}</h2>
-        <p className="text-zinc-500">{folder.cards.length} cards</p>
+        <p className="text-zinc-500">{(folder.cards || []).length} cards</p>
       </Link>
       <button
         onClick={() => onDelete(folder.id)}

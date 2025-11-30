@@ -15,7 +15,7 @@ export default function StudyPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  if (!folder || folder.cards.length === 0) {
+  if (!folder || !folder.cards || folder.cards.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <p>No cards to study in this folder.</p>
@@ -26,17 +26,17 @@ export default function StudyPage() {
     );
   }
 
-  const card = folder.cards[currentIndex];
+  const card = folder.cards![currentIndex];
 
   const handleNext = () => {
     setIsFlipped(false);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % folder.cards.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % folder.cards!.length);
   };
 
   const handlePrev = () => {
     setIsFlipped(false);
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? folder.cards.length - 1 : prevIndex - 1
+      prevIndex === 0 ? folder.cards!.length - 1 : prevIndex - 1
     );
   };
 
@@ -51,7 +51,7 @@ export default function StudyPage() {
         <Flashcard card={card} isFlipped={isFlipped} onFlip={handleFlip} />
         <StudyNavigation onPrev={handlePrev} onNext={handleNext} />
         <div className="text-center mt-4 text-sm text-zinc-500">
-          Card {currentIndex + 1} of {folder.cards.length}
+          Card {currentIndex + 1} of {folder.cards!.length}
         </div>
         <div className="text-center mt-4">
           <Link href={`/folder/${id}`} className="text-blue-500">

@@ -3,64 +3,110 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { Folder } from '@/types/Folder';
 import type { Card } from '@/types/Card';
-
+import { getFolders } from '@/services/getFolders';
+import { createFolder } from '@/services/createFolder';
+import { deleteFolder } from '@/services/deleteFolder';
+import { createCard } from '@/services/createCard';
+import { deleteCard } from '@/services/deleteCard';
 interface AppContextType {
   folders: Folder[];
-  addFolder: (name: string) => void;
-  deleteFolder: (id: string) => void;
-  addCard: (folderId: string, card: Omit<Card, 'id'>) => void;
-  deleteCard: (folderId: string, cardId: string) => void;
+  loading: boolean;
+  error: string | null;
+  addFolder: (name: string) => Promise<void>;
+  deleteFolder: (id: string) => Promise<void>;
+  addCard: (folderId: string, card: Omit<Card, 'id' | 'folder_id'>) => Promise<void>;
+  deleteCard: (folderId: string, cardId: string) => Promise<void>;
   getFolder: (id: string) => Folder | undefined;
+  refreshFolders: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const user = null;
 
-  useEffect(() => {
-    const storedFolders = localStorage.getItem('folders');
-    if (storedFolders) {
-      setFolders(JSON.parse(storedFolders));
+  const refreshFolders = async () => {
+    if (!user) {
+      setFolders([]);
+      setLoading(false);
+      return;
     }
-  }, []);
+
+    try {
+      setError(null);
+      const data = await getFolders();
+      setFolders(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load folders');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    localStorage.setItem('folders', JSON.stringify(folders));
-  }, [folders]);
+    refreshFolders();
+  }, [user]);
 
-  const addFolder = (name: string) => {
-    const newFolder: Folder = {
-      id: crypto.randomUUID(),
-      name,
-      cards: [],
-    };
-    setFolders((prevFolders) => [...prevFolders, newFolder]);
+  const addFolder = async (name: string) => {
+    try {
+      setError(null);
+      const newFolder = await createFolder(name);
+      setFolders((prev) => [...prev, newFolder]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create folder');
+      throw err;
+    }
   };
 
-  const deleteFolder = (id: string) => {
-    setFolders((prevFolders) => prevFolders.filter((folder) => folder.id !== id));
+  const deleteFolderHandler = async (id: string) => {
+    try {
+      setError(null);
+      await deleteFolder(id);
+      setFolders((prev) => prev.filter((folder) => folder.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete folder');
+      throw err;
+    }
   };
 
-  const addCard = (folderId: string, card: Omit<Card, 'id'>) => {
-    const newCard: Card = { ...card, id: crypto.randomUUID() };
-    setFolders((prevFolders) =>
-      prevFolders.map((folder) =>
-        folder.id === folderId
-          ? { ...folder, cards: [...folder.cards, newCard] }
-          : folder
-      )
-    );
+  const addCard = async (folderId: string, card: Omit<Card, 'id' | 'folder_id'>) => {
+    try {
+      setError(null);
+      const newCard = await createCard(folderId, card.question, card.answer);
+      setFolders((prev) =>
+        prev.map((folder) =>
+          folder.id === folderId
+            ? { ...folder, cards: [...(folder.cards || []), newCard] }
+            : folder
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create card');
+      throw err;
+    }
   };
 
-  const deleteCard = (folderId: string, cardId: string) => {
-    setFolders((prevFolders) =>
-      prevFolders.map((folder) =>
-        folder.id === folderId
-          ? { ...folder, cards: folder.cards.filter((card) => card.id !== cardId) }
-          : folder
-      )
-    );
+  const deleteCardHandler = async (folderId: string, cardId: string) => {
+    try {
+      setError(null);
+      await deleteCard(cardId);
+      setFolders((prev) =>
+        prev.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                cards: (folder.cards || []).filter((card) => card.id !== cardId)
+              }
+            : folder
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete card');
+      throw err;
+    }
   };
 
   const getFolder = (id: string) => {
@@ -69,7 +115,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider
-      value={{ folders, addFolder, deleteFolder, addCard, deleteCard, getFolder }}
+      value={{
+        folders,
+        loading,
+        error,
+        addFolder,
+        deleteFolder: deleteFolderHandler,
+        addCard,
+        deleteCard: deleteCardHandler,
+        getFolder,
+        refreshFolders,
+      }}
     >
       {children}
     </AppContext.Provider>
