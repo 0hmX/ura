@@ -14,18 +14,19 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, clearError } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    clearError();
 
     try {
       if (isLogin) {
-        await signIn();
+        await signIn(email, password);
       } else {
-        await signUp();
+        await signUp(email, password);
       }
       onClose();
     } catch (err) {

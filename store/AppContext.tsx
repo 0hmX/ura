@@ -8,6 +8,7 @@ import { createFolder } from '@/services/createFolder';
 import { deleteFolder } from '@/services/deleteFolder';
 import { createCard } from '@/services/createCard';
 import { deleteCard } from '@/services/deleteCard';
+import { useAuth } from '@/hooks/useAuth';
 interface AppContextType {
   folders: Folder[];
   loading: boolean;
@@ -26,7 +27,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const user = null;
+  const { user } = useAuth();
 
   const refreshFolders = async () => {
     if (!user) {
