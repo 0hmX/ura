@@ -76,15 +76,32 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const addCard = async (folderId: string, card: Omit<Card, 'id' | 'folder_id'>) => {
     try {
       setError(null);
+      console.log('🃏 AppContext: Adding card to folder:', folderId, card);
+      
       const newCard = await createCard(folderId, card.question, card.answer);
-      setFolders((prev) =>
-        prev.map((folder) =>
+      console.log('✅ AppContext: Card created successfully:', newCard);
+      
+      setFolders((prev) => {
+        console.log('📂 AppContext: Current folders before update:', prev.map(f => ({ id: f.id, name: f.name, cardCount: f.cards?.length || 0 })));
+        
+        const updated = prev.map((folder) =>
           folder.id === folderId
             ? { ...folder, cards: [...(folder.cards || []), newCard] }
             : folder
-        )
-      );
+        );
+        
+        console.log('📂 AppContext: Updated folders after adding card:', updated.map(f => ({ id: f.id, name: f.name, cardCount: f.cards?.length || 0 })));
+        return updated;
+      });
+      
+      console.log('✅ AppContext: State update completed');
     } catch (err) {
+      console.error('❌ AppContext: Failed to create card:', err);
+      console.error('❌ AppContext: Error details:', {
+        name: err instanceof Error ? err.name : 'Unknown',
+        message: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : undefined
+      });
       setError(err instanceof Error ? err.message : 'Failed to create card');
       throw err;
     }

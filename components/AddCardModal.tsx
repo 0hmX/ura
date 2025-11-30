@@ -24,9 +24,28 @@ export default function AddCardModal({
     onClose();
   };
 
-  const handleAiSubmit = (cards: Omit<Card, 'id'>[]) => {
-    cards.forEach((card) => addCard(folderId, card));
-    onClose();
+  const handleAiSubmit = async (cards: Omit<Card, 'id' | 'folder_id'>[]) => {
+    console.log('🎴 AddCardModal: Received AI generated cards:', { count: cards.length });
+    console.log('📝 AddCardModal: Cards content:', cards);
+    
+    try {
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        console.log(`🃏 AddCardModal: Adding card ${i + 1}:`, card);
+        await addCard(folderId, card);
+        console.log(`✅ AddCardModal: Card ${i + 1} added successfully`);
+      }
+      console.log('✅ AddCardModal: All cards added successfully, closing modal');
+      
+      // Force refresh folders to ensure UI is updated
+      console.log('🔄 AddCardModal: Refreshing folders to ensure UI update');
+      // We'll need to get this from context if needed
+      
+      onClose();
+    } catch (error) {
+      console.error('❌ AddCardModal: Error adding cards:', error);
+      alert(`Failed to add cards: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   return (

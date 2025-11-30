@@ -17,8 +17,10 @@ export default function AiCardForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (aiText.trim()) {
+      console.log('🎯 Client: Starting card generation...', { textLength: aiText.length, count: cardCount });
       setIsLoading(true);
       try {
+        console.log('📤 Client: Sending request to /api/generate-cards');
         const response = await fetch('/api/generate-cards', {
           method: 'POST',
           headers: {
@@ -30,18 +32,27 @@ export default function AiCardForm({
           }),
         });
 
+        console.log('📥 Client: Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to generate cards');
+          const errorData = await response.json();
+          console.error('❌ Client: API error response:', errorData);
+          throw new Error(errorData.error || 'Failed to generate cards');
         }
 
         const data = await response.json();
+        console.log('✅ Client: Received cards:', { count: data.cards?.length });
+        console.log('📋 Client: Cards data:', data.cards);
+        
         onSubmit(data.cards);
       } catch (error) {
-        console.error(error);
-        alert('Failed to generate cards. Please try again.');
+        console.error('💥 Client: Error during card generation:', error);
+        alert(`Failed to generate cards: ${error instanceof Error ? error.message : 'Unknown error'}`);
       } finally {
         setIsLoading(false);
       }
+    } else {
+      console.warn('⚠️ Client: No text provided for card generation');
     }
   };
 
