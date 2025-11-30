@@ -38,7 +38,7 @@ export default function StudyPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div>
       <Header title={folder.name} backLink={`/folder/${id}`} />
       <div className="w-full px-4 mt-4">
         <Flashcard card={card} />

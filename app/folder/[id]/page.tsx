@@ -29,13 +29,14 @@ export default function FolderPage() {
 
   return (
     <div className="font-sans text-zinc-900">
-      <Header title={folder.name} backLink="/" />
-      <main className="p-4 relative">
-        <div className="mb-4">
+      <Header title={folder.name} backLink="/">
+        <div className="flex gap-2">
           <StudyButton folderId={folder.id} />
+          <AddCardButton onClick={() => setIsModalOpen(true)} />
         </div>
+      </Header>
+      <main className="p-4 relative">
         <CardList folder={folder} onDelete={deleteCard} />
-        <AddCardButton onClick={() => setIsModalOpen(true)} />
       </main>
       {isModalOpen && (
         <AddCardModal
