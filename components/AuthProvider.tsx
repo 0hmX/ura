@@ -60,12 +60,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔔 AuthProvider: Auth state change:', event, session?.user?.email || 'No user');
+        console.log('📱 AuthProvider: User agent:', navigator.userAgent.substring(0, 100));
+        console.log('🌐 AuthProvider: URL:', window.location.href);
+        
         try {
           const userData = session?.user ?? null;
           setUser(userData);
           
           if (userData) {
             console.log('📝 AuthProvider: Loading profile for user:', userData.id);
+            console.log('👤 AuthProvider: User metadata:', {
+              email: userData.email,
+              emailVerified: userData.email_confirmed_at,
+              lastSignIn: userData.last_sign_in_at,
+              createdAt: userData.created_at
+            });
             await loadProfile(userData.id);
           } else {
             console.log('❌ AuthProvider: No user, clearing profile');

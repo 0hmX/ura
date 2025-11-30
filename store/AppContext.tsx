@@ -30,7 +30,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   const refreshFolders = async () => {
+    console.log('🔄 AppContext: refreshFolders called, user:', user?.email || 'No user');
+    
     if (!user) {
+      console.log('👤 AppContext: No user, clearing folders and stopping loading');
       setFolders([]);
       setLoading(false);
       return;
@@ -38,11 +41,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     try {
       setError(null);
-      const data = await getFolders();
+      console.log('📡 AppContext: Starting getFolders request...');
+      
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout - folders took too long to load')), 10000);
+      });
+      
+      const foldersPromise = getFolders();
+      const data = await Promise.race([foldersPromise, timeoutPromise]) as any;
+      
+      console.log('✅ AppContext: getFolders completed, folders:', data.length);
       setFolders(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load folders');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load folders';
+      console.error('❌ AppContext: refreshFolders failed:', err);
+      setError(errorMessage);
+      
+      // On error, still clear loading state and set empty folders
+      setFolders([]);
     } finally {
+      console.log('🏁 AppContext: Setting loading to false');
       setLoading(false);
     }
   };
