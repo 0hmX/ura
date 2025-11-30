@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import Flashcard from '@/components/Flashcard';
 import StudyNavigation from '@/components/StudyNavigation';
 import Header from '@/components/Header';
@@ -45,20 +46,22 @@ export default function StudyPage() {
   };
 
   return (
-    <div>
-      <Header title={folder.name} backLink={`/folder/${id}`} />
-      <div className="w-full px-4 mt-4">
-        <Flashcard card={card} isFlipped={isFlipped} onFlip={handleFlip} />
-        <StudyNavigation onPrev={handlePrev} onNext={handleNext} />
-        <div className="text-center mt-4 text-sm text-zinc-500">
-          Card {currentIndex + 1} of {folder.cards!.length}
-        </div>
-        <div className="text-center mt-4">
-          <Link href={`/folder/${id}`} className="text-blue-500">
-            Back to folder
-          </Link>
+    <AuthGuard>
+      <div>
+        <Header title={folder.name} backLink={`/folder/${id}`} />
+        <div className="w-full px-4 mt-4">
+          <Flashcard card={card} isFlipped={isFlipped} onFlip={handleFlip} />
+          <StudyNavigation onPrev={handlePrev} onNext={handleNext} />
+          <div className="text-center mt-4 text-sm text-zinc-500">
+            Card {currentIndex + 1} of {folder.cards!.length}
+          </div>
+          <div className="text-center mt-4">
+            <Link href={`/folder/${id}`} className="text-blue-500">
+              Back to folder
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

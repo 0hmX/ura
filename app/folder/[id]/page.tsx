@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import AddCardModal from '@/components/AddCardModal';
 import CardList from '@/components/CardList';
 import StudyButton from '@/components/StudyButton';
@@ -28,22 +29,24 @@ export default function FolderPage() {
   }
 
   return (
-    <div className="font-sans text-zinc-900">
-      <Header title={folder.name} backLink="/">
-        <div className="flex gap-2">
-          <StudyButton folderId={folder.id} />
-          <AddCardButton onClick={() => setIsModalOpen(true)} />
-        </div>
-      </Header>
-      <main className="p-4 relative">
-        <CardList folder={folder} onDelete={deleteCard} />
-      </main>
-      {isModalOpen && (
-        <AddCardModal
-          folderId={folder.id}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-    </div>
+    <AuthGuard>
+      <div className="font-sans text-zinc-900">
+        <Header title={folder.name} backLink="/">
+          <div className="flex gap-2">
+            <StudyButton folderId={folder.id} />
+            <AddCardButton onClick={() => setIsModalOpen(true)} />
+          </div>
+        </Header>
+        <main className="p-4 relative">
+          <CardList folder={folder} onDelete={deleteCard} />
+        </main>
+        {isModalOpen && (
+          <AddCardModal
+            folderId={folder.id}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
+      </div>
+    </AuthGuard>
   );
 }

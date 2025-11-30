@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { UserMenu } from '@/components/auth/UserMenu';
 
 export default function Header({
   title,
@@ -20,7 +21,10 @@ export default function Header({
         )}
         <h1 className="text-xl font-bold text-zinc-900">{title}</h1>
       </div>
-      <div>{children}</div>
+      <div className="flex items-center gap-4">
+        {children}
+        <UserMenu />
+      </div>
     </header>
   );
 }

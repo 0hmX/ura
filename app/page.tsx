@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAppContext } from '@/store/AppContext';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import AddFolderModal from '@/components/AddFolderModal';
 import FolderList from '@/components/FolderList';
 import AddFolderButton from '@/components/AddFolderButton';
@@ -12,13 +13,15 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="font-sans text-zinc-900">
-      <Header title="Flashcards" />
-      <main className="p-4 relative">
-        <FolderList folders={folders} onDelete={deleteFolder} />
-        <AddFolderButton onClick={() => setIsModalOpen(true)} />
-      </main>
-      {isModalOpen && <AddFolderModal onClose={() => setIsModalOpen(false)} />}
-    </div>
+    <AuthGuard>
+      <div className="font-sans text-zinc-900">
+        <Header title="Flashcards" />
+        <main className="p-4 relative">
+          <FolderList folders={folders} onDelete={deleteFolder} />
+          <AddFolderButton onClick={() => setIsModalOpen(true)} />
+        </main>
+        {isModalOpen && <AddFolderModal onClose={() => setIsModalOpen(false)} />}
+      </div>
+    </AuthGuard>
   );
 }

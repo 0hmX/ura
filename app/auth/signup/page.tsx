@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { PublicRoute } from '@/components/auth/PublicRoute';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -36,7 +37,8 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="bg-white py-8 px-6 shadow rounded-lg">
+    <PublicRoute>
+      <div className="bg-white py-8 px-6 shadow rounded-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
         <p className="mt-2 text-sm text-gray-600">
@@ -117,5 +119,6 @@ export default function SignUpPage() {
         </button>
       </form>
     </div>
+    </PublicRoute>
   );
 }
