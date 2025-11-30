@@ -4,24 +4,19 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
 
 export function UserMenu() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const logout = useLogout();
 
-  if (!user || !profile) {
+  if (!user) {
     return null;
   }
 
   return (
-    <div className="flex items-center space-x-4">
-      <span className="text-sm text-gray-600">
-        Welcome, {profile.username}
-      </span>
-      <button
-        onClick={logout}
-        className="text-sm text-blue-600 hover:text-blue-500"
-      >
-        Sign Out
-      </button>
-    </div>
+    <button
+      onClick={logout}
+      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
+    >
+      Sign Out
+    </button>
   );
 }

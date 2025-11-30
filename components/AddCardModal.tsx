@@ -17,7 +17,7 @@ export default function AddCardModal({
   onClose: () => void;
 }) {
   const { addCard } = useAppContext();
-  const [mode, setMode] = useState<Mode>('manual');
+  const [mode, setMode] = useState<Mode>('ai');
 
   const handleManualSubmit = (question: string, answer: string) => {
     addCard(folderId, { question, answer });

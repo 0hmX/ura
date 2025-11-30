@@ -6,10 +6,12 @@ export default function Header({
   title,
   backLink,
   children,
+  showUserMenu = false,
 }: {
   title: string;
   backLink?: string;
   children?: ReactNode;
+  showUserMenu?: boolean;
 }) {
   return (
     <header className="flex items-center justify-between p-4 border-b border-zinc-200">
@@ -23,7 +25,7 @@ export default function Header({
       </div>
       <div className="flex items-center gap-4">
         {children}
-        <UserMenu />
+        {showUserMenu && <UserMenu />}
       </div>
     </header>
   );

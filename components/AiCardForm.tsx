@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCards } from '@/utils/gemini';
 import type { Card } from '@/types/Card';
 
 export default function AiCardForm({
@@ -14,18 +13,32 @@ export default function AiCardForm({
   const [aiText, setAiText] = useState('');
   const [cardCount, setCardCount] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (aiText.trim() && apiKey.trim()) {
+    if (aiText.trim()) {
       setIsLoading(true);
       try {
-        const cards = await generateCards(aiText, cardCount, apiKey);
-        onSubmit(cards);
+        const response = await fetch('/api/generate-cards', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: aiText,
+            count: cardCount,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate cards');
+        }
+
+        const data = await response.json();
+        onSubmit(data.cards);
       } catch (error) {
         console.error(error);
-        alert('Failed to generate cards. Please check your API key and try again.');
+        alert('Failed to generate cards. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -55,13 +68,6 @@ export default function AiCardForm({
           max="20"
         />
       </div>
-      <input
-        type="password"
-        value={apiKey}
-        onChange={(e) => setApiKey(e.target.value)}
-        placeholder="Gemini API Key"
-        className="w-full p-2 border border-zinc-300 rounded-lg mb-4"
-      />
       <div className="flex justify-end gap-4 mt-4">
         <button
           type="button"

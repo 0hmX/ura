@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <AuthGuard>
       <div className="font-sans text-zinc-900">
-        <Header title="Flashcards" />
+        <Header title="Flashcards" showUserMenu={true} />
         <main className="p-4 relative">
           <FolderList folders={folders} onDelete={deleteFolder} />
           <AddFolderButton onClick={() => setIsModalOpen(true)} />
